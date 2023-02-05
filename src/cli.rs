@@ -7,18 +7,18 @@ use clap::{Parser, ValueEnum};
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
 pub struct Args {
-    // /// only print duplicate lines
-    // #[clap(short = 'd', long = "repeated")]
-    // pub repeated: bool,
+    /// only print duplicate lines
+    #[clap(short = 'd', long = "repeated")]
+    pub repeated: bool,
+
+    /// only print unique lines
+    #[clap(short = 'u', long = "unique")]
+    pub unique: bool,
 
     // // sort uses -f, uniq -i
     // /// ignore differences in case, will make everything lower case
     // #[clap(short = 'i', long = "ignore-case")]
     // pub ignore_case: bool,
-
-    // /// only print unique lines
-    // #[clap(short = 'u', long = "unique")]
-    // pub unique: bool,
 
     // /// line delimiter is NUL, not newline
     // #[clap(short = 'z', long = "zero-terminated")]

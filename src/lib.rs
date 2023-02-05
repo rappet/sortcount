@@ -56,7 +56,10 @@ pub fn run(args: &Args) -> Result<()> {
         *counts.entry(line).or_default() += 1;
     }
 
-    let mut results: Vec<_> = counts.into_iter().collect();
+    let mut results: Vec<_> = counts
+        .into_iter()
+        .filter(|(_word, count)| !(args.repeated && *count == 1 || args.unique && *count > 1))
+        .collect();
 
     sort_result(args.order, &mut results);
 
