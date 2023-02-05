@@ -1,0 +1,15 @@
+[package]
+name = "sortcount"
+version = "0.1.0"
+edition = "2021"
+description = "sort | count"
+license = "MIT"
+keywords = ["sort", "count"]
+categories = ["command-line-utilities", "text-processing"]
+repository = "https://github.com/rappet/sortcount"
+authors = ["Raphael Peters <rappet@rappet.de>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.1.4", default-features = false, features = ["std", "help", "usage", "error-context", "suggestions", "derive"] }
