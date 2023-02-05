@@ -3,7 +3,7 @@
 #![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
 
-use crate::cli::Args;
+use crate::cli::{Args, Order};
 use std::collections::HashMap;
 use std::fmt::Formatter;
 use std::fs::File;
@@ -18,6 +18,23 @@ fn open_reader(args: &Args) -> Result<Box<dyn BufRead>> {
         path => {
             let file = File::open(path).map_err(Error::IoInput)?;
             Ok(Box::new(BufReader::new(file)))
+        }
+    }
+}
+
+fn sort_result(order: Option<Order>, results: &mut [(String, u64)]) {
+    if let Some(order) = order {
+        match order {
+            Order::Count => {
+                results.sort_by(|(first_value, first_count), (second_value, second_count)| {
+                    (first_count, first_value).cmp(&(second_count, second_value))
+                });
+            }
+            Order::CountDesc => {
+                results.sort_by(|(first_value, first_count), (second_value, second_count)| {
+                    (second_count, first_value).cmp(&(first_count, second_value))
+                });
+            }
         }
     }
 }
@@ -39,7 +56,11 @@ pub fn run(args: &Args) -> Result<()> {
         *counts.entry(line).or_default() += 1;
     }
 
-    for (word, count) in counts {
+    let mut results: Vec<_> = counts.into_iter().collect();
+
+    sort_result(args.order, &mut results);
+
+    for (word, count) in results {
         println!("{count:7} {word}");
     }
 

@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 
 /// sort | count, count occurrences of lines, but faster and with less memory
 ///
@@ -27,7 +27,21 @@ pub struct Args {
     // /// skip leading blanks
     // #[clap(short = 'b', long = "ignore-leading-blanks")]
     // pub ignore_leading_blanks: bool,
+    /// order of output sorting
+    ///
+    /// if not specified, the order is undefined
+    #[clap(short = 'o', long = "order")]
+    pub order: Option<Order>,
+
     /// input file
     #[clap(default_value = "-")]
     pub file: String,
+}
+
+#[derive(Debug, Copy, Clone, ValueEnum)]
+pub enum Order {
+    /// show the entry with the least amount of counts first
+    Count,
+    /// show the entry with the most amount of counts first
+    CountDesc,
 }
