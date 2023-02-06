@@ -4,7 +4,7 @@
 #![warn(clippy::cargo)]
 
 use crate::cli::{Args, Order};
-use std::collections::HashMap;
+use ahash::AHashMap;
 use std::fmt::Formatter;
 use std::fs::File;
 use std::io::{stdin, BufRead, BufReader};
@@ -47,13 +47,18 @@ fn sort_result(order: Option<Order>, results: &mut [(String, u64)]) {
 pub fn run(args: &Args) -> Result<()> {
     let reader = open_reader(args)?;
 
-    let mut counts: HashMap<String, u64> = HashMap::new();
+    let mut counts: AHashMap<String, u64> = AHashMap::new();
 
     let lines = reader.lines();
     for line_res in lines {
         let line = line_res.map_err(Error::IoInput)?;
 
-        *counts.entry(line).or_default() += 1;
+        counts
+            .get_mut(line.as_str())
+            .map(|count| *count += 1)
+            .unwrap_or_else(|| {
+                counts.insert(line, 1);
+            });
     }
 
     let mut results: Vec<_> = counts
